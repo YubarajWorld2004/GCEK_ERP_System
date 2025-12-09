@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - GCEK ERP System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="https://media.licdn.com/dms/image/v2/C560BAQEARb5Kgsh-Fg/company-logo_200_200/company-logo_200_200/0/1655539507119/government_college_of_engineering_kalahandi_logo?e=2147483647&v=beta&t=DklQzd5KnyUjk95_AaRh7aE3XNA_s0pCylGgnMA1Pio" alt="GCEK Logo" class="logo">
+                <h3>GCEK ERP Login</h3>
+            </div>
+            <div class="login-body">
+                <form id="login-form">
+                    <div class="mb-4">
+                        <label for="user-type" class="form-label">User Type</label>
+                        <select class="form-select" id="user-type" required>
+                            <option value="">-- Select User Type --</option>
+                            <option value="student">Student</option>
+                            <option value="faculty">Faculty</option>
+                            <option value="hod">HOD</option>
+                            <option value="dean">Dean</option>
+                            <option value="principal">Principal</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Username Field - Always Visible -->
+                    <div class="login-field mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                    </div>
+                    
+                    <!-- Student Specific Fields -->
+                    <div class="login-field hidden" id="student-fields">
+                        <label for="registration-number" class="form-label">Registration Number</label>
+                        <input type="text" class="form-control" id="registration-number" placeholder="Enter registration number">
+                    </div>
+                    
+                    <!-- Faculty Specific Fields -->
+                    <div class="login-field hidden" id="faculty-fields">
+                        <label for="faculty-id" class="form-label">Faculty ID</label>
+                        <input type="text" class="form-control" id="faculty-id" placeholder="Enter faculty ID">
+                    </div>
+                    
+                    <!-- HOD & Dean Specific Fields -->
+                    <div class="login-field hidden" id="hod-dean-fields">
+                        <label for="hod-dean-id" class="form-label">User ID</label>
+                        <input type="text" class="form-control" id="hod-dean-id" placeholder="Enter user ID">
+                    </div>
+                    
+                    <!-- Principal Specific Field -->
+                    <div class="login-field mb-3" id="principal-field">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter password">
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </button>
+                    </div>
+                </form>
+                <div class="text-center mt-4">
+                    <a href="index.html" class="text-decoration-none">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userTypeSelect = document.getElementById('user-type');
+            const studentFields = document.getElementById('student-fields');
+            const facultyFields = document.getElementById('faculty-fields');
+            const hodDeanFields = document.getElementById('hod-dean-fields');
+            const principalField = document.getElementById('principal-field');
+            
+            function updateLoginFields() {
+                const userType = userTypeSelect.value;
+                
+                // Hide all fields first
+                [studentFields, facultyFields, hodDeanFields].forEach(field => {
+                    field.classList.add('hidden');
+                });
+                
+                // Show relevant fields based on user type
+                switch(userType) {
+                    case 'student':
+                        studentFields.classList.remove('hidden');
+                        principalField.classList.add('hidden');
+                        break;
+                    case 'faculty':
+                        facultyFields.classList.remove('hidden');
+                        principalField.classList.add('hidden');
+                        break;
+                    case 'hod':
+                    case 'dean':
+                        hodDeanFields.classList.remove('hidden');
+                        principalField.classList.add('hidden');
+                        break;
+                    case 'principal':
+                        principalField.classList.remove('hidden');
+                        break;
+                    default:
+                        principalField.classList.remove('hidden');
+                }
+            }
+            
+            userTypeSelect.addEventListener('change', updateLoginFields);
+            
+            // Form submission
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const userType = document.getElementById('user-type').value;
+                const username = document.getElementById('username').value;
+                
+                if (!userType) {
+                    alert('Please select user type');
+                    return;
+                }
+                
+                if (!username) {
+                    alert('Please enter username');
+                    return;
+                }
+                
+                // Validate specific fields based on user type
+                let isValid = true;
+                let redirectUrl = '';
+                
+                switch(userType) {
+                    case 'student':
+                        const regNumber = document.getElementById('registration-number').value;
+                        if (!regNumber) {
+                            alert('Please enter registration number');
+                            isValid = false;
+                        } else {
+                            redirectUrl = 'student_dashboard.html';
+                        }
+                        break;
+                    case 'faculty':
+                        const facultyId = document.getElementById('faculty-id').value;
+                        if (!facultyId) {
+                            alert('Please enter faculty ID');
+                            isValid = false;
+                        } else {
+                            redirectUrl = 'faculty_dashboard.html';
+                        }
+                        break;
+                    case 'hod':
+                        const hodId = document.getElementById('hod-dean-id').value;
+                        if (!hodId) {
+                            alert('Please enter user ID');
+                            isValid = false;
+                        } else {
+                            redirectUrl = 'hod_dashboard.html';
+                        }
+                        break;
+                    case 'dean':
+                        const deanId = document.getElementById('hod-dean-id').value;
+                        if (!deanId) {
+                            alert('Please enter user ID');
+                            isValid = false;
+                        } else {
+                            redirectUrl = 'dean_dashboard.html';
+                        }
+                        break;
+                    case 'principal':
+                        const password = document.getElementById('password').value;
+                        if (!password) {
+                            alert('Please enter password');
+                            isValid = false;
+                        } else {
+                            redirectUrl = 'principal_dashboard.html';
+                        }
+                        break;
+                }
+                
+                if (isValid && redirectUrl) {
+                    // Show loading state
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Logging in...';
+                    submitBtn.disabled = true;
+                    
+                    // Simulate API call
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 1500);
+                }
+            });
+            
+            // Initialize fields
+            updateLoginFields();
+        });
+    </script>
+</body>
+</html>
