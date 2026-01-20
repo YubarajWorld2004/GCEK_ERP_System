@@ -1,0 +1,14 @@
+https://gceksystem.netlify.app/
+# IDE folders
+.idea/
+.vscode/
+out/
+
+# Backend build files
+BackEnd/target/
+BackEnd/.idea/
+
+# Logs & temp
+*.log
+*.iml
+.env
